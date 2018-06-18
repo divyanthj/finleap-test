@@ -71,11 +71,28 @@ class App extends Component {
     <table className='ui celled table'>
       <tr>
         <td>Participants</td>
-        <td>
-         {this.state.venues}
-         hello
-        </td>
+        {this.state.venues.map((item) => {
+          console.log("Venue", item);
+          return (<td>
+                    <h5>{item.name}</h5>
+                      <div><label>{item.category}</label></div>
+                      <div><label>5</label></div>
+                  </td>)
+        })}
       </tr>
+      {
+        this.state.participants.map((item) => {
+          return(<tr>
+              <td>{participant}</td>
+              {this.state.venues.map((item) => {
+                console.log("Venue", item);
+                return (<td>
+                          <input type='radio' name='item.name'/>
+                        </td>)
+              })}
+            </tr>)
+        })
+      }
     </table>;
 
     return (<div>
