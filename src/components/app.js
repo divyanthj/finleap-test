@@ -58,19 +58,30 @@ class App extends Component {
   }
 
   render() {
-      return (
-        <div class="lunchplace">
-          <h2>Lunchplace</h2>
-          <div class='ui input'>
-            <input placeholder='Address' class='ui input' value={this.state.address}  onChange={this.handleInputChange.bind(this)}/>
-          </div>
-          <button onClick={this.fetchData.bind(this)} class='ui button'>Get Venues</button>
-          <table>
-          </table>
-        </div>
-      )
-    }
+    let form = <div className="lunchplace">
+      <h2>Lunchplace</h2>
+      <div className='ui input'>
+        <input placeholder='Address' className='ui input' value={this.state.address}  onChange={this.handleInputChange.bind(this)}/>
+      </div>
+      <button onClick={this.fetchData.bind(this)} className='ui button'>Get Venues</button>
+    </div>;
 
+
+    let table =
+    <table className='ui celled table'>
+      <tr>
+        <td>Participants</td>
+        <td>
+         {this.state.venues}
+         hello
+        </td>
+      </tr>
+    </table>;
+
+    return (<div>
+      {form}
+      {table}
+    </div>)
   }
 }
 
