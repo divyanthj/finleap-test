@@ -10,7 +10,9 @@ class App extends Component {
       venues : [],
       participants: [],
       address: '',
-      newParticipant: ''
+      newParticipant: '',
+      choices: {},
+      winner: ''
     };
   }
 
@@ -52,7 +54,45 @@ class App extends Component {
   }
 
   handleSelect(event) {
-    console.log("Selected", event.target.value, event.target.name);
+    let participants = this.state.participants;
+    let participantIndex = _.findIndex(participants, (participant) => {
+      return participant.name == event.target.name;
+    });
+    participants[participantIndex].choice = event.target.value;
+    this.setState({
+      participants: participants
+    });
+    this.calculateChoices();
+  }
+
+  calculateChoices() {
+    this.initiateChoices();
+    let participants = this.state.participants,
+        choices = this.state.choices;
+    participants.forEach((participant) => {
+      if(participant.choice !== "") {
+        choices[participant.choice]++;
+      }
+    });
+    this.setState({
+      participants: participants,
+      choices: choices
+    });
+    this.getWinner();
+  }
+
+  getWinner() {
+    let venues = Object.keys(this.state.choices);
+    let numbers = [];
+    venues.forEach((venue) => {
+      numbers.push(this.state.choices[venue]);
+    });
+    let winner = venues[_.findIndex(numbers, (number) => {
+      return number == _.max(numbers);
+    })];
+    this.setState({
+      winner: winner
+    });
   }
 
   addParticipant() {
@@ -99,8 +139,12 @@ class App extends Component {
         {this.state.venues.map((item) => {
           return (<td>
                     <h5>{item.name}</h5>
-                      <div><label>{item.category}</label></div>
-                      <div><label>5</label></div>
+                    <div><label>{item.category}</label></div>
+                    <div><label>5</label></div>
+                    {
+                      item.name == this.state.winner &&
+                        <i className='check icon'></i>
+                    }
                   </td>)
         })}
       </tr>
@@ -110,7 +154,7 @@ class App extends Component {
               <td>{item.name}</td>
               {this.state.venues.map((venue) => {
                 return (<td>
-                          <input type='radio' name={item.name} onChange={this.handleSelect.bind(this)}/>
+                          <input type='radio' name={item.name} value={venue.name} onChange={this.handleSelect.bind(this)}/>
                         </td>)
               })}
             </tr>)
