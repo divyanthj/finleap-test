@@ -36,6 +36,12 @@ class App extends Component {
         }
       }).then((res) => {
         this.makeData(res.data.response.groups[0].items);
+        this.setState({
+          participants: [],
+          newParticipant: '',
+          choices: {},
+          winner: ''
+        })
       })
     }
 
