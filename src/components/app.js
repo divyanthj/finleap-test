@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import axios from 'axios';
 import api from '../data/api-keys'
+import _ from 'lodash'
 
 class App extends Component {
   constructor(props) {
@@ -15,6 +16,7 @@ class App extends Component {
 
   componentDidMount() {
     this.fetchData();
+    this.initiateChoices();
   }
 
   fetchData() {
@@ -37,10 +39,20 @@ class App extends Component {
 
   }
 
+  initiateChoices() {
+    this.state.venues.forEach((venue) => {
+      this.state.choices[venue.name] = 0;
+    })
+  }
+
   handleInputChange(item, event) {
     let obj = {};
     obj[item] = event.target.value
     this.setState(obj);
+  }
+
+  handleSelect(event) {
+    console.log("Selected", event.target.value, event.target.name);
   }
 
   addParticipant() {
@@ -98,7 +110,7 @@ class App extends Component {
               <td>{item.name}</td>
               {this.state.venues.map((venue) => {
                 return (<td>
-                          <input type='radio' name='item.name'/>
+                          <input type='radio' name={item.name} onChange={this.handleSelect.bind(this)}/>
                         </td>)
               })}
             </tr>)
