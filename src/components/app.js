@@ -8,12 +8,12 @@ class App extends Component {
     this.state = {
       venues : [],
       participants: [],
-      address: ''
+      address: '',
+      newParticipant: ''
     };
   }
 
   componentDidMount() {
-    console.log("Initialized");
     this.fetchData();
   }
 
@@ -37,12 +37,25 @@ class App extends Component {
 
   }
 
-  handleInputChange(event) {
-    this.setState({address: event.target.value})
+  handleInputChange(item, event) {
+    let obj = {};
+    obj[item] = event.target.value
+    this.setState(obj);
+  }
+
+  addParticipant() {
+    let participants = this.state.participants;
+    participants.push({
+      name: this.state.newParticipant,
+      choice: ''
+    });
+    this.setState({
+      participants: participants,
+      newParticipant: ''
+    })
   }
 
   makeData(data) {
-    console.log("Making relevant data", data);
     let venues = [];
     data.forEach((item) => {
       venues.push({
@@ -61,18 +74,17 @@ class App extends Component {
     let form = <div className="lunchplace">
       <h2>Lunchplace</h2>
       <div className='ui input'>
-        <input placeholder='Address' className='ui input' value={this.state.address}  onChange={this.handleInputChange.bind(this)}/>
+        <input placeholder='Address' className='ui input' value={this.state.address}  onChange={this.handleInputChange.bind(this, 'address')}/>
       </div>
       <button onClick={this.fetchData.bind(this)} className='ui button'>Get Venues</button>
     </div>;
 
 
-    let table =
+    let table = (this.state.venues.length > 0) ?
     <table className='ui celled table'>
       <tr>
         <td>Participants</td>
         {this.state.venues.map((item) => {
-          console.log("Venue", item);
           return (<td>
                     <h5>{item.name}</h5>
                       <div><label>{item.category}</label></div>
@@ -83,9 +95,8 @@ class App extends Component {
       {
         this.state.participants.map((item) => {
           return(<tr>
-              <td>{participant}</td>
-              {this.state.venues.map((item) => {
-                console.log("Venue", item);
+              <td>{item.name}</td>
+              {this.state.venues.map((venue) => {
                 return (<td>
                           <input type='radio' name='item.name'/>
                         </td>)
@@ -93,7 +104,13 @@ class App extends Component {
             </tr>)
         })
       }
-    </table>;
+      <tr>
+        <div className='ui input small'>
+          <input placeholder='Participant Name' value={this.state.newParticipant} onChange={this.handleInputChange.bind(this, 'newParticipant')}/>
+        </div>
+        <button className='ui small button' onClick={this.addParticipant.bind(this)} >Add Participant</button>
+      </tr>
+    </table> : null;
 
     return (<div>
       {form}
